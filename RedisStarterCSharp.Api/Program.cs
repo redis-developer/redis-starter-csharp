@@ -6,11 +6,13 @@ DotEnv.Load();
 var env = DotEnv.Read(options: new DotEnvOptions(probeForEnv: true, probeLevelsToSearch: 2));
 var redisUrl = Environment.GetEnvironmentVariable("REDIS_URL");
 
-if (env != null && env.ContainsKey("REDIS_URL")) {
+if (env != null && env.ContainsKey("REDIS_URL"))
+{
     redisUrl = env["REDIS_URL"];
 }
 
-if (redisUrl is null) {
+if (redisUrl is null)
+{
     redisUrl = "localhost";
 }
 

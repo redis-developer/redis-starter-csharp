@@ -77,8 +77,10 @@ public class TodosStoreTests : IAsyncLifetime
             "Fold the laundry"
         };
 
-        foreach (var name in todos) {
-            await _store.CreateAsync(new CreateTodoDTO{
+        foreach (var name in todos)
+        {
+            await _store.CreateAsync(new CreateTodoDTO
+            {
                 Name = name
             });
         }
@@ -90,7 +92,8 @@ public class TodosStoreTests : IAsyncLifetime
         Assert.Equal(allTodos.Total, allTodos.Documents.Count);
         Assert.Equal(todos.Length, allTodos.Total);
 
-        foreach (var todo in allTodos.Documents) {
+        foreach (var todo in allTodos.Documents)
+        {
             Assert.NotNull(todo);
             Assert.NotNull(todo.Value);
             Assert.Contains(todo.Value.Name, todos);

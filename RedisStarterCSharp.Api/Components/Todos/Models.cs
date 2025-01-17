@@ -65,7 +65,8 @@ public class TodoNotFoundException : Exception
     }
 }
 
-public class InvalidTodoException : Exception { 
+public class InvalidTodoException : Exception
+{
     public InvalidTodoException(string message) : base(message)
     {
     }

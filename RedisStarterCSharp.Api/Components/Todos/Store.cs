@@ -11,7 +11,7 @@ public interface ITodosStore
 {
     Task<TodoResults> AllAsync();
     Task<TodoResults> SearchAsync(string? name, string? status);
-    
+
     /// <exception cref="TodoNotFoundException">is thrown if the todo does not exist</exception>
     Task<Todo> OneAsync(string id);
 
@@ -79,7 +79,8 @@ public class TodosStore : ITodosStore
 
     public void DropIndex()
     {
-        if (!HaveIndex()) {
+        if (!HaveIndex())
+        {
             return;
         }
 
@@ -175,7 +176,8 @@ public class TodosStore : ITodosStore
 
         var ok = await _redis.JSON().SetAsync(FormatId(id), "$", todoDocument.Value);
 
-        if (!ok) {
+        if (!ok)
+        {
             throw new InvalidTodoException("failed to create todo");
         }
 
@@ -207,7 +209,8 @@ public class TodosStore : ITodosStore
 
         var ok = await _redis.JSON().SetAsync(id, "$", todo);
 
-        if (!ok) {
+        if (!ok)
+        {
             throw new InvalidTodoException($"failed to update todo \"{id}\"");
         }
 

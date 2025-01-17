@@ -64,6 +64,14 @@ then run:
 dotnet run --project RedisStarterCSharp.Api
 ```
 
+## Other Scripts
+
+Formatting:
+
+```bash
+dotnet format
+```
+
 ## Connecting to Redis Cloud
 
 If you don't yet have a database setup in Redis Cloud [get started here for free](https://redis.io/try-free/).
