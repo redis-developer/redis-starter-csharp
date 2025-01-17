@@ -57,3 +57,16 @@ public class TodoResults
     [JsonPropertyName("documents")]
     required public List<TodoDocument> Documents { get; set; }
 }
+
+public class TodoNotFoundException : Exception
+{
+    public TodoNotFoundException(string id) : base($"Todo \"{id}\" not found")
+    {
+    }
+}
+
+public class InvalidTodoException : Exception { 
+    public InvalidTodoException(string message) : base(message)
+    {
+    }
+}

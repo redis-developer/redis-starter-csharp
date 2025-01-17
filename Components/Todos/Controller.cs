@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace Components.Todos;
 
 [ApiController]
-[Route("todos")]
+[Route("api/todos")]
 public class TodosController : ControllerBase
 {
     private ITodosStore _store;
 
-    public TodosController(ITodosStore store) {
+    public TodosController(ITodosStore store)
+    {
         _store = store;
     }
 
@@ -29,9 +30,16 @@ public class TodosController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> OneAsync(string id)
     {
-        var result = await _store.OneAsync(id);
+        try
+        {
+            var result = await _store.OneAsync(id);
 
-        return result is null ? NotFound(null) : Ok(result);
+            return Ok(result);
+        }
+        catch (TodoNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
     }
 
     [HttpPost]
@@ -39,9 +47,16 @@ public class TodosController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateAsync(CreateTodoDTO input)
     {
-        var result = await _store.CreateAsync(input);
+        try
+        {
+            var result = await _store.CreateAsync(input);
 
-        return result is null ? BadRequest() : Created("/todos/{id}", result);
+            return Created("/todos/{id}", result);
+        }
+        catch (InvalidTodoException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpPatch("{id}")]
@@ -50,18 +65,20 @@ public class TodosController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateAsync(string id, UpdateTodoDTO input)
     {
-        switch (input.Status) {
-            case TodoStatus.Todo:
-            case TodoStatus.InProgress:
-            case TodoStatus.Complete:
-                break;
-            default:
-                return BadRequest($"invalid status {input.Status}");
+        try
+        {
+            var result = await _store.UpdateAsync(id, input);
+
+            return Ok(result);
         }
-
-        var result = await _store.UpdateAsync(id, input);
-
-        return result is null ? NotFound() : Ok(result);
+        catch (TodoNotFoundException e)
+        {
+            return NotFound(e.Message);
+        }
+        catch (InvalidTodoException e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [HttpDelete("{id}")]

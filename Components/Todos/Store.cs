@@ -11,8 +11,16 @@ public interface ITodosStore
 {
     Task<TodoResults> AllAsync();
     Task<TodoResults> SearchAsync(string? name, string? status);
-    Task<Todo?> OneAsync(string id);
+    
+    /// <exception cref="TodoNotFoundException">is thrown if the todo does not exist</exception>
+    Task<Todo> OneAsync(string id);
+
+    /// <exception cref="InvalidTodoException">is thrown if the todo is invalid and not created</exception>
     Task<TodoDocument?> CreateAsync(CreateTodoDTO input);
+
+
+    /// <exception cref="TodoNotFoundException">is thrown if the todo does not exist</exception>
+    /// <exception cref="InvalidTodoException">is thrown if the todo is invalid and not updated</exception>
     Task<Todo?> UpdateAsync(string id, UpdateTodoDTO input);
     Task DeleteAsync(string id);
 }
@@ -122,16 +130,16 @@ public class TodosStore : ITodosStore
         return DeserializeTodoResults(result);
     }
 
-    public async Task<Todo?> OneAsync(string id)
+    public async Task<Todo> OneAsync(string id)
     {
         var result = await _redis.JSON().GetAsync(FormatId(id));
 
         if (result.IsNull)
         {
-            return null;
+            throw new TodoNotFoundException(id);
         }
 
-        var todo = JsonSerializer.Deserialize<Todo>(result.ToString());
+        var todo = JsonSerializer.Deserialize<Todo>(result.ToString()) ?? throw new TodoNotFoundException(id);
 
         return todo;
     }
@@ -155,17 +163,31 @@ public class TodosStore : ITodosStore
 
         var ok = await _redis.JSON().SetAsync(FormatId(id), "$", todoDocument.Value);
 
-        return ok ? todoDocument : null;
+        if (!ok) {
+            throw new InvalidTodoException("failed to create todo");
+        }
+
+        return todoDocument;
     }
 
     public async Task<Todo?> UpdateAsync(string id, UpdateTodoDTO input)
     {
+        switch (input.Status)
+        {
+            case TodoStatus.Todo:
+            case TodoStatus.InProgress:
+            case TodoStatus.Complete:
+                break;
+            default:
+                throw new InvalidTodoException($"invalid status \"{input.Status}\"");
+        }
+
         id = FormatId(id);
         var todo = await OneAsync(id);
 
         if (todo is null)
         {
-            return null;
+            throw new TodoNotFoundException(id);
         }
 
         todo.Status = input.Status;
@@ -173,7 +195,11 @@ public class TodosStore : ITodosStore
 
         var ok = await _redis.JSON().SetAsync(id, "$", todo);
 
-        return ok ? todo : null;
+        if (!ok) {
+            throw new InvalidTodoException($"failed to update todo \"{id}\"");
+        }
+
+        return todo;
     }
 
     public async Task DeleteAsync(string id)
