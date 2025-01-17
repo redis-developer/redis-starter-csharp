@@ -5,7 +5,7 @@ using NRedisStack.Search;
 using NRedisStack.Search.Literals.Enums;
 using StackExchange.Redis;
 
-namespace Components.Todos;
+namespace Api.Components.Todos;
 
 public interface ITodosStore
 {

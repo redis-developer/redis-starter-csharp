@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Components.Todos;
+namespace Api.Components.Todos;
 
 static class TodoStatus
 {

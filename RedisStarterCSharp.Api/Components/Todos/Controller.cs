@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Components.Todos;
+namespace Api.Components.Todos;
 
 [ApiController]
 [Route("api/todos")]

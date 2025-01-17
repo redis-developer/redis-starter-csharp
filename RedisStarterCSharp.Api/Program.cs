@@ -1,9 +1,9 @@
-using Components.Todos;
+using Api.Components.Todos;
 using StackExchange.Redis;
 using dotenv.net;
 
 DotEnv.Load();
-var env = DotEnv.Read();
+var env = DotEnv.Read(options: new DotEnvOptions(probeForEnv: true, probeLevelsToSearch: 2));
 var redisUrl = Environment.GetEnvironmentVariable("REDIS_URL");
 
 if (env != null && env.ContainsKey("REDIS_URL")) {
