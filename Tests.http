@@ -1,0 +1,33 @@
+### Get All Todos
+GET http://localhost:8080/api/todos HTTP/1.1
+
+### Search Todos
+
+GET http://localhost:8080/api/todos/search?status=in progress HTTP/1.1
+
+### Get a single todo
+
+GET http://localhost:8080/api/todos/1 HTTP/1.1
+
+### Create a todo
+
+POST http://localhost:8080/api/todos HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "2",
+    "name": "Laundry"
+}
+
+### Update a todo
+
+PATCH http://localhost:8080/api/todos/2 HTTP/1.1
+Content-Type: application/json
+
+{
+    "status": "in progress"
+}
+
+### Delete a todo
+
+DELETE http://localhost:8080/api/todos/2 HTTP/1.1
