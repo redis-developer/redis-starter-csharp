@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Components.Todos;
+namespace RedisStarterCSharp.Api.Components.Todos;
 
 [ApiController]
 [Route("api/todos")]

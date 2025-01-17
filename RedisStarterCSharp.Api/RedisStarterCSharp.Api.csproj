@@ -4,7 +4,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>redis_csharp_starter</RootNamespace>
+    <RootNamespace>RedisStarterCSharp.Api</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace Api.Components.Todos;
+namespace RedisStarterCSharp.Api.Components.Todos;
 
-static class TodoStatus
+public static class TodoStatus
 {
     public const string Todo = "todo";
     public const string InProgress = "in progress";

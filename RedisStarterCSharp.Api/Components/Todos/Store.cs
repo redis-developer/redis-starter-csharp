@@ -5,7 +5,7 @@ using NRedisStack.Search;
 using NRedisStack.Search.Literals.Enums;
 using StackExchange.Redis;
 
-namespace Api.Components.Todos;
+namespace RedisStarterCSharp.Api.Components.Todos;
 
 public interface ITodosStore
 {
@@ -23,6 +23,9 @@ public interface ITodosStore
     /// <exception cref="InvalidTodoException">is thrown if the todo is invalid and not updated</exception>
     Task<Todo?> UpdateAsync(string id, UpdateTodoDTO input);
     Task DeleteAsync(string id);
+    Task DeleteAllAsync();
+    void CreateIndexIfNotExists();
+    void DropIndex();
 }
 
 public class TodosStore : ITodosStore
@@ -54,7 +57,7 @@ public class TodosStore : ITodosStore
         return result.Any(i => i.ToString() == TodosIndex);
     }
 
-    private void CreateIndexIfNotExists()
+    public void CreateIndexIfNotExists()
     {
         if (HaveIndex())
         {
@@ -72,6 +75,15 @@ public class TodosStore : ITodosStore
                 .Prefix(TodoPrefix),
             schema
         );
+    }
+
+    public void DropIndex()
+    {
+        if (!HaveIndex()) {
+            return;
+        }
+
+        _redis.FT().DropIndex(TodosIndex);
     }
 
     private TodoResults DeserializeTodoResults(SearchResult result)
@@ -205,5 +217,12 @@ public class TodosStore : ITodosStore
     public async Task DeleteAsync(string id)
     {
         await _redis.JSON().DelAsync(FormatId(id));
+    }
+
+    public async Task DeleteAllAsync()
+    {
+        var todos = await AllAsync();
+
+        await _redis.KeyDeleteAsync([.. todos.Documents.Select(t => (RedisKey)t.Id)]);
     }
 }
