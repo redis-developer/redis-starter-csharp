@@ -15,6 +15,9 @@ services:
   server:
     container_name: server
     build: .
+    # build: 
+    #   context: ./RedisStarterCSharp.Api
+    #   dockerfile: Dockerfile
     ports:
       - "${PORT-8080}:${PORT-8080}"
     environment:

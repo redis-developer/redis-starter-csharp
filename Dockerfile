@@ -5,12 +5,12 @@ ARG TARGETARCH
 WORKDIR /source
 
 # Copy project file and restore as distinct layers
-COPY --link ./*.csproj .
+COPY --link ./RedisStarterCSharp.Api/RedisStarterCSharp.Api.csproj .
 RUN dotnet restore -a $TARGETARCH
 
 # Copy source code and publish app
 COPY --link . .
-RUN dotnet publish --no-restore -a $TARGETARCH -o /app
+RUN dotnet publish ./RedisStarterCSharp.Api -a $TARGETARCH -o /app
 
 
 # Enable globalization and time zones:
@@ -21,4 +21,4 @@ EXPOSE 8080
 WORKDIR /app
 COPY --link --from=build /app .
 USER $APP_UID
-ENTRYPOINT ["./redis-starter-csharp"]
+ENTRYPOINT ["./RedisStarterCSharp.Api"]
