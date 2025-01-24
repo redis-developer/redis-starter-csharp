@@ -42,7 +42,7 @@ You should have a server running on `http://localhost:<port>` where the port is 
 
 ## Running tests
 
-There are some tests in the `pkg/todos/store_test.go` file that can be run with the following command:
+There are some tests in the `RedisStarterCSharp.Api.Tests` project that can be run with the following command:
 
 ```bash
 dotnet test
